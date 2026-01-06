@@ -28,15 +28,7 @@ export const db = getFirestore(app);
 
 // // Your web app's Firebase configuration
 // // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// const firebaseConfig = {
-//   apiKey: "AIzaSyAB9wkRy46hWIRMSptloIuvmsWo3njxIdU",
-//   authDomain: "smartbridge-b9434.firebaseapp.com",
-//   projectId: "smartbridge-b9434",
-//   storageBucket: "smartbridge-b9434.firebasestorage.app",
-//   messagingSenderId: "1071863325156",
-//   appId: "1:1071863325156:web:6f9263de16faa3805167f1",
-//   measurementId: "G-C0KYERRM0Q"
-// };
+
 
 // // Initialize Firebase
 // const app = initializeApp(firebaseConfig);
