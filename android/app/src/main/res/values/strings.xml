@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">upskillnow</string>
+    <string name="title_activity_main">upskillnow</string>
+    <string name="package_name">com.upskillnow.app</string>
+    <string name="custom_url_scheme">com.upskillnow.app</string>
+</resources>
