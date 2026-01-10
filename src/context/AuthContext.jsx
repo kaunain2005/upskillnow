@@ -74,7 +74,7 @@ export function AuthProvider({ children }) {
     try {
       await signOut(auth);
       setUser(null);
-      router.push("/auth");
+      router.push("/");
     } catch (err) {
       console.error("Logout failed:", err);
     }

@@ -97,7 +97,7 @@ const ProfileField = ({ label, value }) => (
 
 // ----------------- Component -----------------
 export default function StudentDashboardPage() {
-    const { user, loading: authLoading } = useAuth({ redirectTo: "/login", role: "student" });
+    const { user, loading: authLoading } = useAuth({ redirectTo: "/student-dashboard/dashboard", role: "student" });
     const router = useRouter();
 
     // ----------------- Hooks -----------------
