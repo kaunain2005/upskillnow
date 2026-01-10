@@ -235,10 +235,10 @@ export default function App() {
             semesters.add(course.semester);
 
             if (course.department === selectedDept && course.year === selectedYear && course.semester === selectedSem) {
-                courses.push({ value: course._id, label: `${course.title} (${course.department}-${course.year}-${course.semester})` });
+                courses.push({ value: course.id, label: `${course.title} (${course.department}-${course.year}-${course.semester})` });
 
                 // Populate chapters only if a course is selected
-                if (course._id === selectedCourseId) {
+                if (course.id === selectedCourseId) {
                     // Find the full course object to access chapters
                     const fullCourse = allCourses.find(c => c._id === selectedCourseId);
                     fullCourse?.chapters?.forEach(chapter => {

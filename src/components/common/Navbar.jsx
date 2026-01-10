@@ -10,15 +10,39 @@ import LoadingButton from "@/components/ui/LoadingButton";
 import { AnimatedThemeToggler } from "../ui/animated-theme-toggler";
 import { ShinyButton } from "../ui/shiny-button";
 import { useRouter } from "next/navigation";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export default function Navbar() {
   const router = useRouter();
+  const [dbUser, setDbUser] = useState(null);
   const { user, isAdmin, isStudent, isAuthenticated, logout, loading } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
 
   const navbarRef = useRef(null);
+
+  useEffect(() => {
+    if (!user?.id) {
+      setDbUser(null);
+      return;
+    }
+
+    const unsub = onSnapshot(
+      doc(db, "users", user.id),
+      (snap) => {
+        if (snap.exists()) {
+          setDbUser(snap.data());
+        }
+      },
+      (err) => {
+        console.error("Navbar user fetch error:", err);
+      }
+    );
+
+    return () => unsub();
+  }, [user?.id]);
 
   // ✅ Scroll behavior
   useEffect(() => {
@@ -97,12 +121,13 @@ export default function Navbar() {
   ];
 
   const profileImage =
-    user?.profileImage ||
-    (user?.gender?.toLowerCase() === "male"
+    dbUser?.profileImage ||
+    (dbUser?.gender?.toLowerCase() === "male"
       ? "/images/defaults/maleDefaultProfile.png"
-      : user?.gender?.toLowerCase() === "female"
+      : dbUser?.gender?.toLowerCase() === "female"
         ? "/images/defaults/femaleDefaultProfile.png"
         : "/images/defaults/defaultProfile.png");
+
 
   return (
     <nav
@@ -129,7 +154,7 @@ export default function Navbar() {
             ))}
             {isAuthenticated ? (
               isAdmin ? (
-                  <ShinyButton onClick={() => router.push("/admin-dashboard")}>Admin Dashboard</ShinyButton>
+                <ShinyButton onClick={() => router.push("/admin-dashboard")}>Admin Dashboard</ShinyButton>
               ) : null
             ) : null
             }
@@ -143,7 +168,15 @@ export default function Navbar() {
                   onClick={() => setProfileOpen(!profileOpen)}
                   className="w-10 h-10 rounded-full border-2 border-indigo-500 overflow-hidden"
                 >
-                  <img src={profileImage} alt="profile" className="w-full h-full object-cover" />
+                  <img
+                    src={profileImage}
+                    alt="profile"
+                    onError={(e) => {
+                      e.currentTarget.src = "/images/defaults/defaultProfile.png";
+                    }}
+                    className="w-full h-full object-cover"
+                  />
+
                 </button>
 
                 {profileOpen && (
@@ -164,12 +197,6 @@ export default function Navbar() {
                         Admin Panel
                       </Link>
                     )}
-                    <Link
-                      href="/profile"
-                      className="block px-4 py-2 text-gray-700 dark:text-gray-50 hover:bg-gray-100 dark:hover:bg-gray-800"
-                    >
-                      Profile
-                    </Link>
                     <LoadingButton
                       className="bg-red-600"
                       onClick={() => {

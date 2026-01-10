@@ -1,6 +1,7 @@
+// src/app/(student)/student-dashboard/dashboard/page.jsx
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState, useMemo, useRef, useEffect, useCallback } from "react"; // Added useCallback
 import { Bar, Doughnut, Line } from "react-chartjs-2";
@@ -15,12 +16,15 @@ import {
     Tooltip,
     Legend,
     Title,
+    Filler
 } from "chart.js";
 import toast, { Toaster } from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import gsap from "gsap";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 // Register Chart.js components
 ChartJS.register(
@@ -32,7 +36,8 @@ ChartJS.register(
     PointElement,
     Tooltip,
     Legend,
-    Title
+    Title,
+    Filler 
 );
 
 // ----------------- Validation Schema -----------------
@@ -97,7 +102,7 @@ const ProfileField = ({ label, value }) => (
 
 // ----------------- Component -----------------
 export default function StudentDashboardPage() {
-    const { user, loading: authLoading } = useAuth({ redirectTo: "/student-dashboard/dashboard", role: "student" });
+    const { user, loading: authLoading } = useAuth();
     const router = useRouter();
 
     // ----------------- Hooks -----------------
@@ -119,19 +124,35 @@ export default function StudentDashboardPage() {
     });
 
     // ----------------- Sync student data -----------------
+    useEffect(() => {
+        if (!user?.id) return;
+
+        const fetchStudent = async () => {
+            try {
+                const ref = doc(db, "users", user.id);
+                const snap = await getDoc(ref);
+
+                if (snap.exists()) {
+                    const data = snap.data();
+                    setStudent(data);
+                    reset(data); // correct
+                }
+            } catch (err) {
+                console.error("Failed to fetch student:", err);
+            }
+        };
+
+        fetchStudent();
+    }, [user?.id, reset]);
+
+
     const syncAndOpenModal = useCallback(() => {
-        if (user) {
-            setStudent(user);
-            reset(user); // Reset form with current user data
+        if (student) {
+            reset(student);
         }
         setIsModalOpen(true);
-    }, [user, reset]);
+    }, [student, reset]);
 
-    useEffect(() => {
-        if (user) {
-            setStudent(user);
-        }
-    }, [user]);
 
     // ----------------- Animate Modal -----------------
     useEffect(() => {
@@ -146,13 +167,15 @@ export default function StudentDashboardPage() {
 
     // ----------------- Profile Image -----------------
     const profileImage =
-        preview || student?.profileImage?.startsWith("http")
-            ? preview || student.profileImage
+        preview ||
+        (typeof student?.profileImage === "string" && student.profileImage.startsWith("http")
+            ? student.profileImage
             : student?.gender?.toLowerCase() === "male"
                 ? "/images/defaults/maleDefaultProfile.png"
                 : student?.gender?.toLowerCase() === "female"
                     ? "/images/defaults/femaleDefaultProfile.png"
-                    : "/images/defaults/defaultProfile.png";
+                    : "/images/defaults/defaultProfile.png");
+
 
     // ----------------- File Upload -----------------
     const handleFileSelect = async (e) => {
@@ -168,7 +191,7 @@ export default function StudentDashboardPage() {
 
         setIsUploading(true);
         try {
-            const studentId = user?._id || student?._id;
+            const studentId = user.id;
             if (!studentId) throw new Error("User ID is missing for upload");
 
             const res = await uploadToCloudinary(file, studentId, (p) => setProgress(p), setXhr);
@@ -202,34 +225,33 @@ export default function StudentDashboardPage() {
     const onSubmit = async (data) => {
         setLoading(true);
         try {
+            if (!user?.id) throw new Error("User not authenticated");
+
             const profileUrl = uploadedUrl || student.profileImage || null;
 
-            const formData = new FormData();
-            ["mobile", "stream", "year", "division", "gender"].forEach((key) => {
-                // Only append if the value is provided (optional fields can be empty)
-                if (data[key] !== undefined && data[key] !== null) formData.append(key, data[key]);
-            });
-            if (profileUrl) formData.append("profileImage", profileUrl);
+            const updatePayload = {
+                mobile: data.mobile || "",
+                stream: data.stream,
+                year: data.year,
+                division: data.division || "",
+                gender: data.gender || "",
+                profileImage: profileUrl,
+                updatedAt: new Date().toISOString(),
+            };
 
-            const res = await fetch("/api/auth/update", { // Update API
-                method: "POST",
-                body: formData,
-            });
+            await updateDoc(doc(db, "users", user.id), updatePayload);
 
-            const result = await res.json();
+            const updatedStudent = { ...student, ...updatePayload };
+            setStudent(updatedStudent);
+            reset(updatedStudent);
 
-            if (!res.ok) throw new Error(result.error || "Failed to update profile");
-
-            toast.success(result.message || "Profile updated!");
-            setStudent(result.student);
-            reset(result.student);
+            toast.success("Profile updated successfully!");
+            setIsModalOpen(false);
             setPreview(null);
             setUploadedUrl(null);
-            // Close the modal on successful update
-            setIsModalOpen(false);
         } catch (err) {
             console.error(err);
-            toast.error(err.message || "Update failed");
+            toast.error(err.message || "Profile update failed");
         } finally {
             setLoading(false);
         }
@@ -252,15 +274,16 @@ export default function StudentDashboardPage() {
     }), []);
 
     // ----------------- Render -----------------
-    if (authLoading || !student) return <p className="p-6 text-center text-gray-500 dark:text-gray-300">Loading...</p>;
-
+    if (authLoading || !user || !student) {
+        return <p className="p-6 text-center text-gray-500 dark:text-gray-300">Loading...</p>;
+    }
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6 md:p-10 text-gray-900 dark:text-white transition-colors duration-300">
             <Toaster position="top-center" />
 
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-2">
-                <h1 className="text-3xl font-bold mb-2 md:mb-0 text-gray-900 dark:text-white">
+                <h1 className="mt-15 text-3xl font-bold mb-2 md:mb-0 text-gray-900 dark:text-white">
                     👋 Welcome, {student.name?.split(" ")[0]}!
                 </h1>
                 <div className="flex flex-wrap gap-2">
@@ -306,17 +329,31 @@ export default function StudentDashboardPage() {
 
             {/* Charts Section (Responsive) */}
             <div className={`grid grid-cols-1 lg:grid-cols-3 gap-8`}>
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
-                    <h3 className="text-lg font-semibold mb-4 text-indigo-400">Weekly Attendance</h3>
-                    <Bar data={attendanceData} options={{ responsive: true, maintainAspectRatio: false }} />
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg h-[320px]">
+                    <h3 className="text-lg font-semibold mb-4 text-indigo-400">
+                        Weekly Attendance
+                    </h3>
+                    <div className="relative h-[240px]">
+                        <Bar
+                            data={attendanceData}
+                            options={{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                            }}
+                        />
+                    </div>
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
                     <h3 className="text-lg font-semibold mb-4 text-indigo-400">Subject-wise Marks</h3>
-                    <Line data={marksData} options={{ responsive: true, maintainAspectRatio: false }} />
+                    <div className="relative h-[250px] sm:h-[260px] lg:h-[280px]">
+                        <Line data={marksData} options={{ responsive: true, maintainAspectRatio: false }} />
+                    </div>
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
                     <h3 className="text-lg font-semibold mb-4 text-indigo-400">Activity Breakdown</h3>
-                    <Doughnut data={activityData} options={{ responsive: true, maintainAspectRatio: false }} />
+                    <div className="relative h-[290px] sm:h-[260px] lg:h-[280px]">
+                        <Doughnut data={activityData} options={{ responsive: true, maintainAspectRatio: false }} />
+                    </div>
                 </div>
             </div>
 

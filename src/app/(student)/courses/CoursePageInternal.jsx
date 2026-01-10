@@ -249,8 +249,8 @@ export default function CoursePageInternal() {
 
                             {/* Link to the Course Detail Page (e.g., /courses/[courseId]) */}
                             <Link
-                                href={`${DETAIL_ROUTE_PREFIX}/${course._id}`}
-                                className="mt-4 w-full text-center text-base font-semibold text-white bg-green-500 hover:bg-green-600 py-2 px-4 rounded-lg transition-colors shadow-md hover:shadow-lg"
+                                href={`/course?courseId=${course._id}`}
+                                className="mt-4 w-full text-center text-base font-semibold text-white bg-green-500 hover:bg-green-600 py-2 px-4 rounded-lg"
                             >
                                 View Course
                             </Link>
@@ -265,7 +265,7 @@ export default function CoursePageInternal() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {data.map((item) => (
                     <NavigationCard
-                        key={item}
+                        key={`${type}-${item}`}
                         label={item}
                         // 🎯 Change 4: Updated icon logic for NOTES
                         icon={type === 'menu' ? (item === 'SUBJECTS' ? '📖' : item === 'QUIZES' ? '📝' : item === 'NOTES' ? '📚' : '💻') : '📁'}
@@ -279,7 +279,7 @@ export default function CoursePageInternal() {
     return (
         <Suspense fallback={<div className="p-6">Loading courses...</div>}>
             <div className="min-h-screen bg-[var(--background)] dark:bg-[var(--secondary-background)] p-4 sm:p-8 lg:pt-20 font-['Inter']">
-                <div className="w-full mx-auto">
+                <div className="w-full mx-auto mt-15">
                     {/* --- Breadcrumb and Back Button Area --- */}
                     <div className="flex justify-between items-center mb-6">
                         <div className="flex items-center">
@@ -302,7 +302,7 @@ export default function CoursePageInternal() {
                                     {crumbs.map((crumb, index) => {
                                         const isLast = index === crumbs.length - 1;
                                         return (
-                                            <React.Fragment key={crumb.label}>
+                                            <React.Fragment key={`${crumb.label}-${index}`}>
                                                 <BreadcrumbItem>
                                                     {!isLast ? (
                                                         <BreadcrumbLink href={crumb.path}>

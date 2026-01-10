@@ -6,11 +6,14 @@ import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { PlusCircle, XCircle, BookOpen, Layers, Zap } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { useAuth } from "@/context/AuthContext";
 
 // 💡 NEW: Import the custom LoadingButton component
 import LoadingButton from '@/components/ui/LoadingButton';
 // 💡 We need the Framer motion component for the small buttons' animation
-import { motion } from "framer-motion"; 
+import { motion } from "framer-motion";
 
 // --- Initial State and Options (No Change) ---
 const initialModule = { title: '', content: '', image: '' };
@@ -191,66 +194,94 @@ const AddCoursePage = () => {
 
 
     // --- Submission Handler (Logic kept the same) ---
+    const { user } = useAuth();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!user) {
+            toast.error("Please login first");
+            return;
+        }
+
         setIsLoading(true);
 
-        const requiredFields = ['title', 'description', 'image', 'duration', 'startDate', 'endDate'];
-        for (const field of requiredFields) {
-            if (!courseData[field]) {
-                toast.error(`The '${field}' field is required.`);
-                setIsLoading(false);
-                return;
-            }
-        }
-        
-        const invalidChapter = courseData.chapters.some(ch => !ch.title.trim());
-        if (invalidChapter) {
-            toast.error("All chapters must have a title.");
-            setIsLoading(false);
-            return;
-        }
-
-        const invalidModule = courseData.chapters.some(ch => 
-            ch.modules.some(mod => !mod.title.trim() || !mod.content.trim())
-        );
-        if (invalidModule) {
-            toast.error("All modules must have a title and content.");
-            setIsLoading(false);
-            return;
-        }
-
         try {
-            const response = await fetch('/api/courses', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(courseData),
+            console.log("Creating course for user:", user.id);
+
+            // 1️⃣ Create Course
+            const courseRef = await addDoc(collection(db, "courses"), {
+                title: courseData.title,
+                description: courseData.description,
+                image: courseData.image,
+                duration: courseData.duration,
+                startDate: courseData.startDate,
+                endDate: courseData.endDate,
+                fullInfo: courseData.fullInfo,
+                department: courseData.department,
+                year: courseData.year,
+                semester: courseData.semester,
+                createdBy: user.id, // ✅ FIX
+                createdAt: Timestamp.now(), // ✅ MOBILE SAFE
+                status: "active"
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to create course.');
+            console.log("Course created:", courseRef.id);
+
+            // 2️⃣ Chapters + Modules
+            for (let chapIndex = 0; chapIndex < courseData.chapters.length; chapIndex++) {
+                const chapter = courseData.chapters[chapIndex];
+
+                const chapterRef = await addDoc(
+                    collection(db, "courses", courseRef.id, "chapters"),
+                    {
+                        title: chapter.title,
+                        order: chapIndex,
+                        createdAt: Timestamp.now()
+                    }
+                );
+
+                for (let modIndex = 0; modIndex < chapter.modules.length; modIndex++) {
+                    const module = chapter.modules[modIndex];
+
+                    await addDoc(
+                        collection(
+                            db,
+                            "courses",
+                            courseRef.id,
+                            "chapters",
+                            chapterRef.id,
+                            "modules"
+                        ),
+                        {
+                            title: module.title,
+                            content: module.content,
+                            image: module.image || "",
+                            order: modIndex,
+                            createdAt: Timestamp.now()
+                        }
+                    );
+                }
             }
 
-            const newCourse = await response.json();
-            toast.success('Course created successfully! 🎉');
-            router.push(`/courses/${newCourse._id}`); 
+            toast.success("Course created successfully 🎉");
+            router.push(`/courses/${courseRef.id}`);
+
         } catch (error) {
-            toast.error(`Error: ${error.message}`);
+            console.error("Firestore Error:", error);
+            toast.error(error.message || "Failed to create course");
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300"> 
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
             <div className="container mx-auto max-w-6xl p-4 sm:p-6 lg:p-8">
                 <h1 className="text-4xl font-extrabold text-gray-900 dark:text-indigo-400 mb-8 border-b-4 border-indigo-200 dark:border-indigo-600 pb-4">
                     📚 Create New Course
                 </h1>
-                
+
                 <form onSubmit={handleSubmit} className="space-y-8">
 
                     {/* General Course Information */}
@@ -280,7 +311,7 @@ const AddCoursePage = () => {
                             <SelectInput label="Semester" name="semester" value={courseData.semester} onChange={handleCourseChange} options={semesterOptions} />
                         </div>
                     </section>
-                    
+
                     {/* Chapters and Modules */}
                     <section className="bg-white dark:bg-gray-800 shadow-xl hover:shadow-2xl transition-shadow duration-300 rounded-xl p-8 border-t-8 border-blue-600">
                         <div className="flex justify-between items-center mb-6 border-b dark:border-gray-700 pb-3">
@@ -297,17 +328,17 @@ const AddCoursePage = () => {
                                 <div key={chapIndex} className="p-6 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-700 shadow-md">
                                     <div className="flex justify-between items-start mb-4 pb-3 border-b border-gray-300 dark:border-gray-600">
                                         <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">Chapter {chapIndex + 1}</h3>
-                                        
-                                        <ActionButton 
-                                            onClick={() => removeChapter(chapIndex)} 
-                                            type="button" 
-                                            variant="danger" 
+
+                                        <ActionButton
+                                            onClick={() => removeChapter(chapIndex)}
+                                            type="button"
+                                            variant="danger"
                                             icon={<XCircle className="w-4 h-4" />}
                                             className="w-8 h-8 p-0"
                                             aria-label={`Remove Chapter ${chapIndex + 1}`}
                                         />
                                     </div>
-                                    
+
                                     <Input
                                         label="Chapter Title"
                                         name="title"
@@ -317,9 +348,9 @@ const AddCoursePage = () => {
                                         required
                                         className="mb-6"
                                     />
-                                    
+
                                     {/* Modules container - distinct background */}
-                                    <div className="mt-6 space-y-4 p-4 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-gray-900/40"> 
+                                    <div className="mt-6 space-y-4 p-4 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-gray-900/40">
                                         <div className="flex justify-between items-center">
                                             <h4 className="text-lg font-semibold text-blue-800 dark:text-blue-300">Modules ({chapter.modules.length})</h4>
                                             <ActionButton onClick={() => addModule(chapIndex)} type="button" variant="secondary" icon={<PlusCircle className="w-4 h-4 mr-1" />}>
@@ -331,7 +362,7 @@ const AddCoursePage = () => {
                                             // Module Card - Highly distinct, using indigo accent
                                             <div key={modIndex} className="p-4 border-l-4 border-indigo-400 dark:border-indigo-600 rounded-lg bg-indigo-50 dark:bg-gray-900 shadow-md relative">
                                                 <h5 className="text-md font-bold text-indigo-700 dark:text-indigo-400 mb-3">Module {modIndex + 1}</h5>
-                                                
+
                                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                                     <Input
                                                         label="Title"
@@ -357,12 +388,12 @@ const AddCoursePage = () => {
                                                         placeholder="Detailed content for this module."
                                                     />
                                                 </div>
-                                                
+
                                                 <div className="absolute top-2 right-2">
-                                                    <ActionButton 
-                                                        onClick={() => removeModule(chapIndex, modIndex)} 
-                                                        type="button" 
-                                                        variant="danger" 
+                                                    <ActionButton
+                                                        onClick={() => removeModule(chapIndex, modIndex)}
+                                                        type="button"
+                                                        variant="danger"
                                                         icon={<XCircle className="w-4 h-4" />}
                                                         className="w-7 h-7 p-0"
                                                         aria-label={`Remove Module ${modIndex + 1}`}
@@ -377,8 +408,8 @@ const AddCoursePage = () => {
                     </section>
 
                     {/* Submission Button - 💡 USING THE CUSTOM LOADING BUTTON */}
-                    <LoadingButton 
-                        type="submit" 
+                    <LoadingButton
+                        type="submit"
                         loading={isLoading} // The prop name must be 'loading'
                         className="w-full h-14 text-xl tracking-wider uppercase font-extrabold shadow-indigo-500/50"
                     >

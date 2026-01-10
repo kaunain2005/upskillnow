@@ -18,7 +18,7 @@ const LoadingScreen = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % messages.length);
-    }, 2500); // 2.5 seconds gives them time to read the joke
+    }, 1000); // 2.5 seconds gives them time to read the joke
     return () => clearInterval(interval);
   }, []);
 
@@ -71,7 +71,7 @@ export default function AuthGuard({ children }) {
   const publicRoutes = ['/auth', '/unauthorized', '/'];
   const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route + '/'));
 
-  if (loading || (!user && !isPublicRoute)) {
+  if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <LoadingScreen />

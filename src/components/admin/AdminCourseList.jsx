@@ -1,5 +1,4 @@
 // src/components/admin/AdminCourseList.jsx
-
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -8,6 +7,8 @@ import { Loader2, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import CourseCard from '../common/CourseCard';
 import SearchPannel from '../common/SearchPannel';
+import { collection, getDocs, query, orderBy, doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 /**
  * Central component for fetching, filtering, and displaying courses.
@@ -28,18 +29,28 @@ const AdminCourseList = ({ mode }) => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const res = await fetch('/api/courses');
-                if (!res.ok) throw new Error("Failed to fetch courses.");
-                const data = await res.json();
-                setCourses(data);
+                const q = query(
+                    collection(db, "courses"),
+                    orderBy("createdAt", "desc")
+                );
+
+                const snapshot = await getDocs(q);
+                const list = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                setCourses(list);
             } catch (error) {
-                toast.error(error.message);
+                toast.error("Failed to load courses");
             } finally {
                 setLoading(false);
             }
         };
+
         fetchCourses();
     }, []);
+
 
     // --- Search & Filter Handlers ---
     const handleFilterChange = (key, value) => {
@@ -80,19 +91,18 @@ const AdminCourseList = ({ mode }) => {
     };
 
     const handleDelete = async (id) => {
-        if (!confirm("Are you sure you want to delete this course? This action cannot be undone.")) return;
+        if (!confirm("Delete this course?")) return;
 
-        // Simulating the API call for delete
         try {
-            // Placeholder: Replace with actual delete API call
-            // const res = await fetch(`/api/courses/${id}`, { method: 'DELETE' });
-            // if (!res.ok) throw new Error("Failed to delete course.");
+            await updateDoc(doc(db, "courses", id), {
+                status: "deleted",
+                deletedAt: new Date()
+            });
 
-            toast.success("Course deleted successfully (Simulated)!");
-            // Update the list immediately after successful deletion
-            setCourses(prev => prev.filter(c => c._id !== id));
+            toast.success("Course deleted");
+            setCourses(prev => prev.filter(c => c.id !== id));
         } catch (error) {
-            toast.error(error.message);
+            toast.error("Delete failed");
         }
     };
 
@@ -136,7 +146,7 @@ const AdminCourseList = ({ mode }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredCourses.map(course => (
                         <CourseCard
-                            key={course._id}
+                            key={course.id}
                             course={course}
                             showUpdateButton={showUpdate}
                             showDeleteButton={showDelete}
