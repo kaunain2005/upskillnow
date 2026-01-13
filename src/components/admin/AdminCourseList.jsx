@@ -31,7 +31,7 @@ const AdminCourseList = ({ mode }) => {
             try {
                 const q = query(
                     collection(db, "courses"),
-                    orderBy("createdAt", "desc")
+                    where("status", "==", "active")
                 );
 
                 const snapshot = await getDocs(q);
@@ -99,10 +99,39 @@ const AdminCourseList = ({ mode }) => {
                 deletedAt: new Date()
             });
 
-            toast.success("Course deleted");
-            setCourses(prev => prev.filter(c => c.id !== id));
+            toast.success("Course moved to Deleted");
+            setCourses(prev => prev.map(c =>
+                c.id === id ? { ...c, status: "deleted" } : c
+            ));
         } catch (error) {
             toast.error("Delete failed");
+        }
+    };
+
+    const activeCourses = filteredCourses.filter(
+        c => c.status !== "deleted"
+    );
+
+    const deletedCourses = filteredCourses.filter(
+        c => c.status === "deleted"
+    );
+
+    const handleRecover = async (id) => {
+        try {
+            await updateDoc(doc(db, "courses", id), {
+                status: "active",
+                recoveredAt: new Date()
+            });
+
+            toast.success("Course recovered");
+
+            setCourses(prev =>
+                prev.map(c =>
+                    c.id === id ? { ...c, status: "active" } : c
+                )
+            );
+        } catch (err) {
+            toast.error("Recover failed");
         }
     };
 
@@ -143,18 +172,49 @@ const AdminCourseList = ({ mode }) => {
                     </div>
                 )}
 
+                <h2 className="text-xl font-bold mb-4">Active Courses</h2>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredCourses.map(course => (
+                    {activeCourses.map(course => (
                         <CourseCard
                             key={course.id}
                             course={course}
-                            showUpdateButton={showUpdate}
-                            showDeleteButton={showDelete}
+                            showUpdateButton
+                            showDeleteButton
                             onUpdate={handleUpdate}
                             onDelete={handleDelete}
                         />
                     ))}
                 </div>
+                {deletedCourses.length > 0 && (
+                    <>
+                        <h2 className="text-xl font-bold text-red-600 mt-10 mb-4">
+                            Deleted Courses
+                        </h2>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {deletedCourses.map(course => (
+                                <div
+                                    key={course.id}
+                                    className="border border-red-300 bg-red-50 p-4 rounded-xl"
+                                >
+                                    <h3 className="font-bold text-lg">{course.title}</h3>
+                                    <p className="text-sm text-gray-600 mb-4">
+                                        {course.description}
+                                    </p>
+
+                                    <button
+                                        onClick={() => handleRecover(course.id)}
+                                        className="bg-green-600 text-white px-4 py-2 rounded"
+                                    >
+                                        Recover
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                )}
+
             </main>
         </div>
     );

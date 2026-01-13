@@ -13,7 +13,7 @@ import { Trash2, Edit, BookOpen, Clock, Calendar, Layers, Hash } from 'lucide-re
  * @param {function} props.onUpdate - Handler for the update action (navigates/opens modal).
  */
 const CourseCard = ({ course, showDeleteButton, showUpdateButton, onDelete, onUpdate }) => {
-    const { _id, title, description, duration, startDate, endDate, department, year, semester, chapters } = course;
+    const { id, title, description, duration, startDate, endDate, department, year, semester, chapters } = course;
 
     // Format dates nicely
     const formattedStartDate = new Date(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -28,23 +28,23 @@ const CourseCard = ({ course, showDeleteButton, showUpdateButton, onDelete, onUp
 
             {/* Course Details Section */}
             <div className="p-6">
-                
+
                 {/* Title and ID */}
                 <h3 className="text-2xl font-extrabold text-gray-900 dark:text-gray-50 mb-1 line-clamp-2">
                     {title}
                 </h3>
                 <div className="flex items-center text-xs text-gray-400 dark:text-gray-500 mb-4">
                     <Hash className="w-3 h-3 mr-1" />
-                    <span className="font-mono">{_id}</span>
+                    <span className="font-mono">{id}</span>
                 </div>
-                
+
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-6 line-clamp-3">
                     {description}
                 </p>
 
                 {/* Metadata Section - Structured and elevated */}
                 <div className="grid grid-cols-2 gap-y-3 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border dark:border-gray-700">
-                    
+
                     {/* Category */}
                     <div className="flex items-center text-sm font-semibold text-gray-800 dark:text-gray-200 border-r dark:border-gray-600 pr-4">
                         <Layers className="w-4 h-4 mr-2 text-blue-500" />
@@ -70,7 +70,7 @@ const CourseCard = ({ course, showDeleteButton, showUpdateButton, onDelete, onUp
                             <span className="font-medium">Starts: {formattedStartDate}</span>
                         </div>
                         <div className='flex items-center'>
-                             <Calendar className="w-4 h-4 mr-2 text-pink-500 opacity-0" /> {/* Spacer */}
+                            <Calendar className="w-4 h-4 mr-2 text-pink-500 opacity-0" /> {/* Spacer */}
                             <span className="font-medium">Ends: {formattedEndDate}</span>
                         </div>
                     </div>
@@ -80,20 +80,20 @@ const CourseCard = ({ course, showDeleteButton, showUpdateButton, onDelete, onUp
             {/* Action Buttons (Sticky at bottom) */}
             {showActions && (
                 <div className="w-full flex p-4 bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 space-x-3">
-                    
+
                     {showUpdateButton && (
                         <button
-                            onClick={() => onUpdate(_id)}
+                            onClick={() => onUpdate(course.id)}
                             className="flex items-center justify-center p-3 text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition duration-200 shadow-lg shadow-indigo-500/50 w-full"
                             aria-label={`Update course: ${title}`}
                         >
                             <Edit className="w-4 h-4 mr-2" /> Update Course
                         </button>
                     )}
-                    
+
                     {showDeleteButton && (
                         <button
-                            onClick={() => onDelete(_id)}
+                            onClick={() => onDelete(id)}
                             className="flex items-center justify-center p-3 text-sm font-bold bg-red-600 hover:bg-red-700 text-white rounded-lg transition duration-200 shadow-lg shadow-red-500/50 w-full"
                             aria-label={`Delete course: ${title}`}
                         >

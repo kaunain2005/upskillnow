@@ -1,3 +1,4 @@
+// src/app/(student)/course/page.jsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -32,12 +33,22 @@ export default function CoursePage() {
                 const chaptersRef = collection(db, 'courses', courseId, 'chapters');
                 const chaptersSnap = await getDocs(chaptersRef);
 
-                setChapters(
-                    chaptersSnap.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }))
+                const chaptersWithCounts = await Promise.all(
+                    chaptersSnap.docs.map(async ch => {
+                        const modulesSnap = await getDocs(
+                            collection(db, 'courses', courseId, 'chapters', ch.id, 'modules')
+                        );
+
+                        return {
+                            id: ch.id,
+                            ...ch.data(),
+                            moduleCount: modulesSnap.size
+                        };
+                    })
                 );
+
+                setChapters(chaptersWithCounts);
+
             } finally {
                 setLoading(false);
             }
@@ -52,26 +63,28 @@ export default function CoursePage() {
     return (
         <div className="min-h-screen p-4 lg:p-8">
             {/* Breadcrumb */}
-            <div className="mb-4 text-sm">
-                <Link href="/courses" className="text-blue-600">Courses</Link> /
+            <div className="mb-4 text-sm pt-10">
+                <Link href="/courses" className="text-blue-600">Courses</Link>
                 <span className="ml-1 font-semibold">{course.title}</span>
             </div>
 
             {/* Course Info */}
-            <h1 className="text-2xl font-bold mb-2">{course.title}</h1>
+            <h1 className="text-2xl font-bold mb-2">COURSE- {course.title}</h1>
             <p className="text-gray-600 mb-6">{course.description}</p>
 
             {/* Chapters */}
             <h2 className="text-xl font-semibold mb-4">Chapters</h2>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {chapters.map(ch => (
+                {chapters.map((ch, index) => ( // Added 'index' here
                     <Link
                         key={ch.id}
                         href={`/chapter?courseId=${courseId}&chapterId=${ch.id}`}
                         className="p-4 border rounded-xl shadow hover:shadow-lg transition"
                     >
-                        <h3 className="font-bold text-lg">{ch.title}</h3>
+                        <h3 className="font-bold text-lg">
+                            {(index + 1).toString().padStart(2, '0')}. {ch.title}
+                        </h3>
                         <p className="text-sm text-gray-500">{ch.description}</p>
                     </Link>
                 ))}
