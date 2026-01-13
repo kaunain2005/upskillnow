@@ -7,7 +7,15 @@ import { Loader2, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import CourseCard from '../common/CourseCard';
 import SearchPannel from '../common/SearchPannel';
-import { collection, getDocs, query, orderBy, doc, updateDoc } from "firebase/firestore";
+import {
+    collection,
+    getDocs,
+    query,
+    orderBy,
+    doc,
+    updateDoc,
+    where   // ✅ ADD THIS
+} from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 /**
@@ -31,7 +39,7 @@ const AdminCourseList = ({ mode }) => {
             try {
                 const q = query(
                     collection(db, "courses"),
-                    where("status", "==", "active")
+                    orderBy("createdAt", "desc")
                 );
 
                 const snapshot = await getDocs(q);
