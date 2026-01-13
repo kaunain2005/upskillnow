@@ -118,6 +118,7 @@ export default function Navbar() {
     { href: "/courses", label: "Courses" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
+    { href: "/interview", label: "Interview" },
   ];
 
   const profileImage =

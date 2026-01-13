@@ -23,7 +23,7 @@ const LoadingScreen = () => {
   }, []);
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center text-center bg-slate-50">
+    <div className="flex h-screen flex-col items-center justify-center text-center">
       <div className="mb-4 h-12 w-12 animate-bounce text-4xl">📚</div>
       <p className="text-xl font-bold text-blue-600 animate-pulse text-center px-4">
         {messages[index]}

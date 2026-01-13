@@ -25,17 +25,17 @@ const sections = {
     { title: "Quizzes Created", value: null, icon: FiClipboard, color: "bg-yellow-500", key: "quizzes", apiPath: "/api/quizzes" },
     { title: "Pending Tasks", value: "5", icon: FiLayout, color: "bg-red-500", key: "tasks", apiPath: null },
   ],
-  students: [
-    { title: "Add Student", path: "/admin-dashboard/students/add" },
-    { title: "List Students", path: "/admin-dashboard/students/list" },
-    { title: "Update Student", path: "/admin-dashboard/students/update" },
-    { title: "Remove Student", path: "/admin-dashboard/students/remove" },
-  ],
+  // students: [
+  //   { title: "Add Student", path: "/admin-dashboard/students/add" },
+  //   { title: "List Students", path: "/admin-dashboard/students/list" },
+  //   { title: "Update Student", path: "/admin-dashboard/students/update" },
+  //   { title: "Remove Student", path: "/admin-dashboard/students/remove" },
+  // ],
   courses: [
     { title: "Add Course", path: "/admin-dashboard/courses/add" },
-    { title: "List Courses", path: "/admin-dashboard/courses/list" },
-    { title: "Update Course", path: "/admin-dashboard/courses/update" },
-    { title: "Remove Course", path: "/admin-dashboard/courses/remove" },
+    { title: "List & Update Courses", path: "/admin-dashboard/courses/list" },
+    // { title: "Update Course", path: "/admin-dashboard/courses/update" },
+    // { title: "Remove Course", path: "/admin-dashboard/courses/remove" },
   ],
   quizzes: [
     { title: "Add Quiz", path: "/admin-dashboard/quizzes/add" },
