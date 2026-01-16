@@ -8,6 +8,8 @@ import {
   FaUserGraduate,
   FaLock,
 } from "react-icons/fa";
+import Link from 'next/link';
+import { Terminal, FileText, Printer, MapPin, ArrowRight } from 'lucide-react';
 import { MdQuiz, MdOutlineMenuBook } from "react-icons/md";
 import { AiOutlineRobot } from "react-icons/ai";
 import { MarqueeDemo } from "@/components/common/MaqueeDemo";
@@ -17,7 +19,180 @@ import { ScrollTextView } from "@/components/common/ScrollTextView";
 import { getApps } from "firebase/app";
 import { auth } from "@/lib/firebase";
 
+import {
+  GraduationCap,
+  ShieldCheck,
+  LayoutDashboard,
+  BookOpen,
+  Trophy,
+  Bot
+} from "lucide-react";
+
+const features2 = [
+  {
+    icon: <GraduationCap className="w-6 h-6" />,
+    title: "Student Dashboard",
+    desc: "Track your progress across modules, quizzes, and tests with real-time analytics.",
+    color: "from-blue-500 to-indigo-500"
+  },
+  {
+    icon: <ShieldCheck className="w-6 h-6" />,
+    title: "Admin Dashboard",
+    desc: "Seamlessly manage courses and content while monitoring student performance metrics.",
+    color: "from-emerald-500 to-teal-500"
+  },
+  {
+    icon: <BookOpen className="w-6 h-6" />,
+    title: "Organized Content",
+    desc: "Deeply structured hierarchy from Stream down to Module level for easy navigation.",
+    color: "from-violet-500 to-purple-500"
+  },
+  {
+    icon: <Trophy className="w-6 h-6" />,
+    title: "Interactive Quizzes",
+    desc: "Chapter-wise mock tests and instant feedback to sharpen your examination skills.",
+    color: "from-orange-500 to-red-500"
+  },
+  {
+    icon: <Bot className="w-6 h-6" />,
+    title: "AI Assistant",
+    desc: "24/7 instant doubt resolution and smart summarization powered by advanced AI.",
+    color: "from-cyan-500 to-blue-500"
+  },
+  {
+    icon: <LayoutDashboard className="w-6 h-6" />,
+    title: "Secure Auth",
+    desc: "Enterprise-grade role-based access control ensuring data privacy and security.",
+    color: "from-slate-500 to-slate-700"
+  }
+];
+
+export function WhyChooseUs() {
+  return (
+    <section id="features2" className="px-6 md:px-16 lg:px-32 py-24 bg-[var(--background)] overflow-hidden">
+      <div className="relative mb-16 text-center">
+        <h2 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl">
+          Why Choose <span className="text-blue-600 dark:text-blue-400">Us?</span>
+        </h2>
+        <div className="mt-4 text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+          We provide the most comprehensive platform for academic excellence and professional growth.
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {features2.map((f, i) => (
+          <div
+            key={i}
+            className="group relative p-8 rounded-3xl transition-all duration-300
+                       bg-white dark:bg-slate-800/50 
+                       border border-slate-200 dark:border-slate-700
+                       hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-500/5
+                       hover:-translate-y-1"
+          >
+            {/* Gradient Icon Backdrop */}
+            <div className={`inline-flex items-center justify-center p-3 rounded-2xl bg-gradient-to-br ${f.color} text-white mb-6 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform duration-300`}>
+              {f.icon}
+            </div>
+
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight">
+              {f.title}
+            </h3>
+
+            <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
+              {f.desc}
+            </p>
+
+            {/* Subtle corner accent for dark mode */}
+            <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${f.color} opacity-[0.03] rounded-bl-full -z-10`} />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 gsap.registerPlugin(ScrollTrigger);
+
+const features = [
+  {
+    title: "Interview Prep",
+    desc: "Master technical rounds with our AI-driven mock questions and tips.",
+    icon: <Terminal className="w-8 h-8" />,
+    path: "/interview",
+    color: "from-blue-500 to-cyan-500"
+  },
+  {
+    title: "Resume Templates",
+    desc: "Craft a professional, ATS-friendly resume with live preview.",
+    icon: <FileText className="w-8 h-8" />,
+    path: "/resume",
+    color: "from-purple-500 to-pink-500"
+  },
+  {
+    title: "PDF Maker",
+    desc: "Convert notes, images, and documents into high-quality PDFs.",
+    icon: <Printer className="w-8 h-8" />,
+    path: "/scan",
+    color: "from-orange-500 to-red-500"
+  },
+  {
+    title: "Career Guidelines",
+    desc: "Step-by-step roadmaps to navigate your professional journey.",
+    icon: <MapPin className="w-8 h-8" />,
+    path: "/career-guidelines",
+    color: "from-emerald-500 to-teal-500"
+  },
+];
+
+export function FeatureSection() {
+  return (
+    <section id="features" className="px-6 md:px-16 lg:px-32 py-20 bg-[var(--background)]">
+      <div className="text-center mb-16">
+        <h2 className="text-4xl font-extrabold tracking-tight text-[var(--primary-text)] dark:text-white mb-4">
+          Professional Tools
+        </h2>
+        <p className="text-[var(--tertiary-text)] max-w-2xl mx-auto">
+          Everything you need to accelerate your career, from preparation to documentation.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {features.map((f, i) => (
+          <Link href={f.path} key={i} className="group relative">
+            <div className="h-full p-8 rounded-2xl transition-all duration-300 
+                            bg-white/50 dark:bg-gray-800/30 
+                            backdrop-blur-md border border-gray-200 dark:border-gray-700
+                            hover:border-transparent hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)]
+                            dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)]
+                            flex flex-col items-start text-left">
+
+              {/* Icon Circle */}
+              <div className={`mb-6 p-3 rounded-xl bg-gradient-to-br ${f.color} text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                {f.icon}
+              </div>
+
+              <h3 className="text-xl font-bold mb-3 text-[var(--primary-text)] dark:text-white">
+                {f.title}
+              </h3>
+
+              <p className="text-[var(--tertiary-text)] dark:text-gray-400 text-sm leading-relaxed mb-6">
+                {f.desc}
+              </p>
+
+              {/* Bottom Link Action */}
+              <div className="mt-auto flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 group-hover:gap-2 transition-all">
+                Try it now <ArrowRight className="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+
+              {/* Hover Gradient Overlay (Mobile Friendly) */}
+              <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${f.color} opacity-0 group-hover:opacity-[0.03] dark:group-hover:opacity-[0.07] transition-opacity pointer-events-none`} />
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 export default function LandingPage() {
   const heroRef = useRef(null);
@@ -26,10 +201,10 @@ export default function LandingPage() {
   const typedRef = useRef(null);
   const subtitleRef = useRef(null);
   // TEST
-    useEffect(() => {
+  useEffect(() => {
     // This will now be TRUE because 'auth' import triggered initializeApp
     console.log("Firebase initialized:", getApps().length > 0);
-    console.log("Current App Name:", getApps()[0]?.name); 
+    console.log("Current App Name:", getApps()[0]?.name);
   }, []);
   // Typed.js setup
   useEffect(() => {
@@ -222,52 +397,11 @@ export default function LandingPage() {
       {/* Scrolling Text */}
       <ScrollTextView text1="🚀 Learn • 📚 Practice • 🧠 Grow • 💻 Succeed ➡️" text2="🚀 Learn • 📚 Practice • 🧠 Grow • 💻 Succeed ➡️" />
 
-      {/* Features */}
-      <section id="features" className="px-8 md:px-16 lg:px-32 py-16">
-        <h2 className="text-3xl font-bold text-center mb-12 text-[var(--primary-text)] dark:text-[var(--secondary2-text)]">Why Choose Us?</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            {
-              icon: <FaUserGraduate />,
-              title: "Student Dashboard",
-              desc: "Track your progress across modules, quizzes, and tests.",
-            },
-            {
-              icon: <FaChalkboardTeacher />,
-              title: "Admin Dashboard",
-              desc: "Manage courses, content, and monitor student performance.",
-            },
-            {
-              icon: <MdOutlineMenuBook />,
-              title: "Organized Content",
-              desc: "Stream → Year → Semester → Chapter → Module structure.",
-            },
-            {
-              icon: <MdQuiz />,
-              title: "Interactive Quizzes",
-              desc: "Chapter-wise quizzes and mock tests with detailed feedback.",
-            },
-            {
-              icon: <AiOutlineRobot />,
-              title: "AI Assistant",
-              desc: "Get instant doubt resolution and smart note summarization.",
-            },
-            {
-              icon: <FaLock />,
-              title: "Secure Auth",
-              desc: "Role-based authentication and authorization system.",
-            },
-          ].map((f, i) => (
-            <div
-              key={i}
-              className="feature-card bg-[var(--card-background)] shadow-lg rounded-xl p-6 flex flex-col items-center text-center transition"
-            >
-              <div className="text-4xl text-blue-700 dark:text-blue-400 mb-4">{f.icon}</div>
-              <h3 className="font-semibold text-lg text-[var(--primary-text)] dark:text-[var(--secondary2-text)] mb-2">{f.title}</h3>
-              <p className="text-[var(--tertiary-text)] dark:text-[var(--quaternary-text)]">{f.desc}</p>
-            </div>
-          ))}
-        </div>
+      <FeatureSection />
+
+      {/* Why Choose Us? */}
+      <section id="features">
+        <WhyChooseUs />
       </section>
 
       {/* Athena AI Section */}

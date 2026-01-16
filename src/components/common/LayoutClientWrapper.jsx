@@ -1,39 +1,71 @@
-// src/components/common/LayoutClientWrapper.jsx
 "use client";
 
-import React from 'react';
-import { usePathname } from 'next/navigation';
-import Footer from './Footer';
-import Navbar from './Navbar';
-// Assuming Navbar is also in this directory if you want to hide it
-// import Navbar from './Navbar'; 
+import React, { useEffect, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { App } from "@capacitor/app";
+import { Toast } from "@capacitor/toast";
+
+import Footer from "./Footer";
+import Navbar from "./Navbar";
 
 export default function LayoutClientWrapper({ children }) {
-    const pathname = usePathname();
+  const pathname = usePathname();
+  const router = useRouter();
 
-    // 🎯 Define the paths where you want the Footer to be HIDDEN.
-    // Use path segments. If the pathname *includes* any of these, the component will be hidden.
-    const hiddenPaths = [
-        "/admin-dashboard", // Hides on all pages inside /admin-dashboard/...
-        "/auth",     // Hides specifically on the auth pages
-        "/athena",
-    ];
+  // ⏱ Track last back press time
+  const lastBackPress = useRef(0);
 
-    // Check if the current path matches any path segment defined in hiddenPaths
-    const shouldHideComponent = hiddenPaths.some(segment =>
-        pathname.includes(segment)
-    );
+  // 🎯 Paths where Navbar & Footer are hidden
+  const hiddenPaths = [
+    "/admin-dashboard",
+    "/auth",
+    "/athena",
+    "/scan",
+  ];
 
-    return (
-        <>
-            {/* 1. Conditionally render the Navbar */}
-            {!shouldHideComponent && <Navbar />}
+  const shouldHideComponent = hiddenPaths.some(segment =>
+    pathname.includes(segment)
+  );
 
-            {/* 2. Render the main page content */}
-            {children}
+  // 📱 ANDROID BACK BUTTON HANDLER WITH TOAST
+  useEffect(() => {
+    if (!window?.Capacitor) return;
 
-            {/* 3. Conditionally render the Footer */}
-            {!shouldHideComponent && <Footer />}
-        </>
-    );
+    const listener = App.addListener("backButton", async ({ canGoBack }) => {
+
+      // 🟢 Normal back navigation
+      if (canGoBack && pathname !== "/") {
+        router.back();
+        return;
+      }
+
+      // 🔴 Home page → double back to exit
+      const now = Date.now();
+
+      if (now - lastBackPress.current < 2000) {
+        App.exitApp();
+      } else {
+        lastBackPress.current = now;
+        await Toast.show({
+          text: "Press back again to exit",
+          duration: "short",
+          position: "bottom",
+        });
+      }
+    });
+
+    return () => {
+      listener.remove();
+    };
+  }, [pathname, router]);
+
+  return (
+    <>
+      {!shouldHideComponent && <Navbar />}
+
+      {children}
+
+      {!shouldHideComponent && <Footer />}
+    </>
+  );
 }

@@ -22,7 +22,7 @@ const contactInfo = [
     {
         title: "General Inquiries",
         icon: "📧",
-        detail: "support.leveluplearn@gmail.com",
+        detail: "support.UpSkillNow@gmail.com",
         type: "email"
     },
     {
@@ -34,7 +34,7 @@ const contactInfo = [
     {
         title: "Corporate Address",
         icon: "📍",
-        detail: "LevelUpLearn HQ, Govandi West, SN",
+        detail: "UpSkillNow HQ, Govandi West, SN",
         type: "address"
     },
 ];

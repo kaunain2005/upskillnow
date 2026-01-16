@@ -25,7 +25,7 @@ const aboutContent = {
         { title: "Community Driven", icon: "🤝", description: "Knowledge thrives in collaboration. We foster a supportive global community for shared growth and mentorship." },
         { title: "Perpetual Growth", icon: "📈", description: "We believe in constant iteration. Our platform and curricula evolve continuously to meet industry demands." },
     ],
-    teamStatement: "Behind LevelUpLearn is a diverse team of educators, engineers, and industry professionals unified by one belief: **The best investment you can make is in yourself.**",
+    teamStatement: "Behind UpSkillNow is a diverse team of educators, engineers, and industry professionals unified by one belief: **The best investment you can make is in yourself.**",
 };
 
 // --- Reusable Animated Component for Mission/Vision Cards (Themed) ---
@@ -147,7 +147,7 @@ export default function AboutPage() {
                 {/* --- 1. Header Section --- */}
                 <header ref={headerRef} className="text-center mb-16 pt-12" style={{ opacity: 0 }}>
                     <p className="text-sm font-extrabold text-[var(--primary-accent)] uppercase tracking-[0.2em]">
-                        ABOUT LEVELUPLEARN
+                        ABOUT UpSkillNow
                     </p>
                     <h1 className="text-6xl md:text-7xl font-extrabold mt-4 mb-4 leading-snug
                         text-[var(--primary-text)] dark:text-[var(--secondary-text)]">

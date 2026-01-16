@@ -42,7 +42,7 @@ export default function Footer() {
           <div className="grid w-full px-10 md:grid-cols-3 gap-8 mt-15 text-center md:text-left relative z-10">
             {/* Left */}
             <div>
-              <h3 className="text-xl font-bold text-[var(--secondary-text)] mb-2">LevelUpLearn</h3>
+              <h3 className="text-xl font-bold text-[var(--secondary-text)] mb-2">UpSkillNow</h3>
               <p className="text-gray-500 text-sm">
                 Unlock your potential with interactive learning and AI support.
               </p>
@@ -72,7 +72,7 @@ export default function Footer() {
         </div>
 
         <p className="text-center text-[var(--tertiary-text)] bg-[var(--secondary-background)] text-md pt-10 relative z-10">
-          © {new Date().getFullYear()} LevelUpLearn. All rights reserved.
+          © {new Date().getFullYear()} UpSkillNow. All rights reserved.
         </p>
       </footer>
   );

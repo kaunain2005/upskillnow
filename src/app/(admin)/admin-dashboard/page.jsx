@@ -11,6 +11,7 @@ import {
   FiLayout,
   FiChevronRight,
   FiEdit3, // <-- NEW: Import icon for Notes
+  FiHome
 } from "react-icons/fi";
 import StudentAnalytics from "@/components/analytics/StudentAnalytics";
 import CourseAnalytics from "@/components/analytics/CourseAnalytics";
@@ -47,6 +48,7 @@ const sections = {
 };
 
 const navItems = {
+  home: { name: "Home", icon: FiHome, path: "/" },
   dashboard: { name: "Dashboard", icon: FiLayout, path: null },
   students: { name: "Students", icon: FiUsers, path: null },
   courses: { name: "Courses", icon: FiBookOpen, path: null },
@@ -194,7 +196,7 @@ export default function AdminDashboard() {
     if (!(activeTab in sections)) return null;
 
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {sections[activeTab].map((card, i) => (
           <div
             key={card.title}
@@ -321,7 +323,7 @@ export default function AdminDashboard() {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:flex-col md:w-64 bg-gray-900 text-white p-6 space-y-8 shadow-2xl">
         <div className="flex items-center mb-10">
-          <Image src="/images/logo-rb.png" width={100} height={100} alt="Admin Logo" />
+          <h1 className="text-xl font-bold">Admin Dashboard</h1>
         </div>
         <nav className="flex flex-col gap-2">
           {Object.entries(navItems).map(([tabKey, { name, icon: Icon, path }]) => (

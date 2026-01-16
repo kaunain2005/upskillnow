@@ -15,7 +15,7 @@ const uuid = () => Math.random().toString(36).substring(2, 9);
 
 // 💡 Athena System Prompt
 const ATHENA_PROMPT = `
-You are Athena, the AI Professor at LevelUpLearn.
+You are Athena, the AI Professor at UpSkillNow.
 You specialize in Computer Science, Information Technology, and Data Science.
 Speak clearly and structure answers. Provide:
 1) A concise explanation

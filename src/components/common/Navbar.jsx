@@ -118,7 +118,6 @@ export default function Navbar() {
     { href: "/courses", label: "Courses" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
-    { href: "/interview", label: "Interview" },
   ];
 
   const profileImage =
@@ -192,10 +191,10 @@ export default function Navbar() {
                     )}
                     {isAdmin && (
                       <Link
-                        href="/admin-dashboard"
+                        href="/student-dashboard/dashboard"
                         className="block px-4 py-2 text-gray-700 dark:text-gray-50 hover:bg-gray-100 dark:hover:bg-gray-800"
                       >
-                        Admin Panel
+                        PROFILE
                       </Link>
                     )}
                     <LoadingButton
@@ -231,6 +230,12 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden bg-white/90 backdrop-blur-md shadow-lg">
           <div className="px-4 pt-4 pb-6 space-y-4">
+            {isAuthenticated ? (
+              isAdmin ? (
+                <ShinyButton onClick={() => router.push("/admin-dashboard")}>Admin Dashboard</ShinyButton>
+              ) : null
+            ) : null
+            }
             {navLinks.map((link) => (
               <Link
                 key={link.href}

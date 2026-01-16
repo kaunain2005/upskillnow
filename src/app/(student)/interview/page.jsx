@@ -1,83 +1,127 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { ChevronDown, Search, BookOpen, Layers, Zap, Code2, Terminal, Globe, Palette } from 'lucide-react';
+import { ChevronDown, Search, BookOpen, Layers, Zap, Code2, Terminal, Globe, Palette, Database, Cpu, Network, CpuIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const INTERVIEW_QNA = {
-    HTML: {
+    PROGRAMMING: {
         BASIC: [
-            { id: 1, question: 'What is HTML?', answer: 'HTML (HyperText Markup Language) is the standard markup language for creating web pages.', tags: ['structure'] },
-            { id: 2, question: 'What are Semantic Tags?', answer: 'Tags like <header>, <article>, and <footer> that clearly describe their meaning to both the browser and the developer.', tags: ['seo'] },
-            { id: 3, question: 'Difference between <div> and <span>?', answer: 'div is a block-level element (starts on a new line), while span is an inline element.', tags: ['layout'] },
+            { id: 1, question: 'Difference between Python and Java?', answer: 'Python is dynamically typed and uses an interpreter, while Java is statically typed and compiled to bytecode for the JVM.', tags: ['basics', 'java', 'python'] },
+            { id: 2, question: 'What are the main features of Java?', answer: 'Platform independence, Object-Oriented, Robust, Secure, and Multithreaded.', tags: ['java'] },
+            { id: 3, question: 'What is PEP 8 in Python?', answer: 'It is a document that provides guidelines and best practices on how to write Python code for maximum readability.', tags: ['python'] },
+            { id: 4, question: 'Explain the "self" keyword in Python.', answer: 'It represents the instance of the class and allows access to the attributes and methods of the class in Python.', tags: ['python', 'oops'] },
+            { id: 5, question: 'What is a Constructor in Java?', answer: 'A special method used to initialize objects. It has the same name as the class and no return type.', tags: ['java', 'oops'] },
+            { id: 6, question: 'Difference between List and Tuple in Python?', answer: 'Lists are mutable (can change), while Tuples are immutable (cannot change).', tags: ['python', 'data-types'] },
+            { id: 7, question: 'What is a Package in Java?', answer: 'A mechanism to encapsulate a group of classes, sub-packages, and interfaces.', tags: ['java'] },
+            { id: 8, question: 'What is __init__ in Python?', answer: 'It is a reserved method in Python classes, known as a constructor in OOPS terminology.', tags: ['python'] },
         ],
         INTERMEDIATE: [
-            { id: 4, question: 'What is SVG?', answer: 'Scalable Vector Graphics used to define vector-based graphics for the web in XML format.', tags: ['graphics'] },
-            { id: 5, question: 'Explain HTML5 Web Storage.', answer: 'Allows web applications to store data locally within the user\'s browser (LocalStorage and SessionStorage).', tags: ['storage'] },
+            { id: 9, question: 'What is Exception Handling in Java?', answer: 'A mechanism to handle runtime errors using try, catch, finally, throw, and throws keywords.', tags: ['java', 'errors'] },
+            { id: 10, question: 'What are List Comprehensions in Python?', answer: 'A concise way to create lists using a single line of code, often replacing for-loops.', tags: ['python'] },
+            { id: 11, question: 'Difference between Overloading and Overriding?', answer: 'Overloading is same method name with different parameters (compile-time); Overriding is same method name/parameters in a subclass (runtime).', tags: ['oops'] },
+            { id: 12, question: 'What is the Global Interpreter Lock (GIL) in Python?', answer: 'A mutex that allows only one thread to hold control of the Python interpreter at a time, impacting CPU-bound multi-threading.', tags: ['python', 'advanced'] },
+            { id: 13, question: 'Explain the "final" keyword in Java.', answer: 'Used to restrict the user. It can be used with variables (constant), methods (no overriding), or classes (no inheritance).', tags: ['java'] },
+            { id: 14, question: 'What are Lambda functions in Python?', answer: 'Small anonymous functions defined with the lambda keyword; they can take any number of arguments but have only one expression.', tags: ['python'] },
         ],
         ADVANCED: [
-            { id: 6, question: 'What is the Critical Rendering Path?', answer: 'The sequence of steps the browser goes through to convert HTML, CSS, and JS into pixels on the screen.', tags: ['performance'] },
-            { id: 7, question: 'What are Web Components?', answer: 'A suite of technologies allowing you to create reusable custom elements with encapsulated functionality.', tags: ['architecture'] },
+            { id: 15, question: 'What is Reflection in Java?', answer: 'An API used to examine or modify the behavior of methods, classes, and interfaces at runtime.', tags: ['java', 'advanced'] },
+            { id: 16, question: 'What are Metaclasses in Python?', answer: 'Metaclasses are the "classes of classes" that define how a class behaves. A class is an instance of a metaclass.', tags: ['python', 'advanced'] },
+            { id: 17, question: 'How does Garbage Collection work in Java?', answer: 'The JVM automatically identifies and deletes objects that are no longer reachable in memory to free up space.', tags: ['java', 'memory'] },
+            { id: 18, question: 'Explain Generators in Python.', answer: 'Functions that return an iterable set of items, one at a time, using the "yield" keyword, making them memory efficient.', tags: ['python'] },
         ]
     },
-    DATA_ANALYSIS: {
+    DATA_STRUCTURES: {
         BASIC: [
-            { id: 101, question: 'What is Data Analysis?', answer: 'The process of inspecting, cleansing, transforming, and modeling data to discover useful information and support decision-making.', tags: ['basics'] },
-            { id: 102, question: 'Difference between Qualitative and Quantitative data?', answer: 'Qualitative data is descriptive/categorical (colors, names), while Quantitative data is numerical (height, price).', tags: ['statistics'] },
-            { id: 103, question: 'What is a CSV file?', answer: 'Comma Separated Values; a plain text file that stores tabular data in a structured format.', tags: ['files'] },
-            { id: 104, question: 'Explain Mean, Median, and Mode.', answer: 'Mean is the average, Median is the middle value, and Mode is the most frequent value in a dataset.', tags: ['statistics'] },
-            { id: 105, question: 'What is Pandas in Python?', answer: 'An open-source library providing high-performance, easy-to-use data structures and data analysis tools.', tags: ['python', 'libraries'] },
-            { id: 106, question: 'What is a DataFrame?', answer: 'A 2-dimensional labeled data structure with columns of potentially different types, similar to a spreadsheet.', tags: ['pandas'] },
-            { id: 107, question: 'What is Data Cleaning?', answer: 'The process of fixing or removing incorrect, corrupted, incorrectly formatted, duplicate, or incomplete data.', tags: ['cleansing'] }
+            { id: 201, question: 'What is a Data Structure?', answer: 'A specialized format for organizing, processing, retrieving, and storing data.', tags: ['basics'] },
+            { id: 202, question: 'Difference between Array and Linked List?', answer: 'Arrays have contiguous memory and fixed size; Linked Lists have non-contiguous memory and dynamic size.', tags: ['array', 'linkedlist'] },
+            { id: 203, question: 'What is a Stack?', answer: 'A linear data structure that follows the LIFO (Last In, First Out) principle.', tags: ['stack'] },
+            { id: 204, question: 'What is a Queue?', answer: 'A linear data structure that follows the FIFO (First In, First Out) principle.', tags: ['queue'] },
         ],
         INTERMEDIATE: [
-            { id: 108, question: 'What is an Outlier?', answer: 'A data point that differs significantly from other observations, often caused by measurement error or heavy-tailed distribution.', tags: ['statistics'] },
-            { id: 109, question: 'Difference between Series and DataFrame?', answer: 'A Series is a 1D array (one column), while a DataFrame is a 2D table (multiple columns).', tags: ['pandas'] },
-            { id: 110, question: 'What is a Pivot Table?', answer: 'A table that summarizes data from a larger table by grouping and aggregating values.', tags: ['excel', 'pandas'] },
-            { id: 111, question: 'Explain Correlation vs. Causation.', answer: 'Correlation means two variables move together; Causation means one variable directly causes the other to change.', tags: ['logic'] },
-            { id: 112, question: 'What is a Box Plot?', answer: 'A standardized way of displaying the distribution of data based on a five-number summary (Min, Q1, Median, Q3, Max).', tags: ['visualization'] },
-
-            { id: 113, question: 'What is Data Normalization?', answer: 'Rescaling data to a specific range (usually 0 to 1) to ensure all features contribute equally to an analysis.', tags: ['preprocessing'] },
-            { id: 114, question: 'Explain the purpose of NumPy.', answer: 'Used for numerical computing in Python, providing support for large, multi-dimensional arrays and matrices.', tags: ['libraries'] }
+            { id: 205, question: 'What is a Hash Map?', answer: 'A data structure that maps keys to values using a hashing function for fast retrieval (O(1) average).', tags: ['hashing'] },
+            { id: 206, question: 'Explain Binary Search Tree (BST).', answer: 'A tree where the left child is smaller than the parent, and the right child is larger.', tags: ['trees'] },
+            { id: 207, question: 'What is the difference between BFS and DFS?', answer: 'BFS uses a queue and explores neighbor nodes first; DFS uses a stack (or recursion) and explores as far as possible along each branch.', tags: ['graph', 'search'] },
         ],
         ADVANCED: [
-            { id: 115, question: 'What is the P-value in statistics?', answer: 'The probability of obtaining results at least as extreme as the observed results, assuming the null hypothesis is true.', tags: ['statistics'] },
-            { id: 116, question: 'Explain A/B Testing.', answer: 'A statistical way of comparing two versions (A and B) to determine which one performs better.', tags: ['marketing', 'product'] },
-            { id: 117, question: 'What is the Central Limit Theorem?', answer: 'States that the distribution of sample means approximates a normal distribution as the sample size becomes larger.', tags: ['statistics'] },
-
-            { id: 118, question: 'Difference between Overfitting and Underfitting?', answer: 'Overfitting is when a model learns noise (too complex); Underfitting is when it fails to capture the trend (too simple).', tags: ['machine-learning'] },
-            { id: 119, question: 'What is Time Series Analysis?', answer: 'Analyzing a sequence of data points collected over time to forecast future trends.', tags: ['forecasting'] },
-            { id: 120, question: 'What is Principal Component Analysis (PCA)?', answer: 'A dimensionality-reduction method used to reduce the complexity of large datasets while preserving as much variance as possible.', tags: ['math'] }
+            { id: 208, question: 'What is an AVL Tree?', answer: 'A self-balancing binary search tree where the height difference between left and right subtrees is at most 1.', tags: ['trees', 'advanced'] },
+            { id: 209, question: 'What is Dynamic Programming?', answer: 'An algorithmic technique that breaks down problems into simpler subproblems and stores results to avoid redundant work (Memoization).', tags: ['algorithms'] },
+            { id: 210, question: 'Explain the "Time Complexity" of QuickSort.', answer: 'Average case is O(n log n), but the worst case is O(n²) if the pivot selection is poor.', tags: ['sorting'] },
         ]
     },
-    CSS: {
+    DBMS: {
         BASIC: [
-            { id: 8, question: 'What is CSS?', answer: 'Cascading Style Sheets used for describing the presentation of a document written in HTML.', tags: ['styling'] },
-            { id: 9, question: 'Explain the Box Model.', answer: 'The model includes Content, Padding, Border, and Margin.', tags: ['basics'] },
+            { id: 301, question: 'What is DBMS?', answer: 'Database Management System is software used to manage, store, and retrieve data efficiently.', tags: ['basics'] },
+            { id: 302, question: 'What are ACID properties?', answer: 'Atomicity, Consistency, Isolation, and Durability - ensuring reliable database transactions.', tags: ['transactions'] },
+            { id: 303, question: 'What is a Primary Key?', answer: 'A unique identifier for each record in a database table. It cannot be null.', tags: ['keys'] },
         ],
         INTERMEDIATE: [
-            { id: 10, question: 'Difference between Flexbox and Grid?', answer: 'Flexbox is 1D (rows OR columns), while Grid is 2D (rows AND columns).', tags: ['layout'] },
+            { id: 304, question: 'What is Normalization?', answer: 'The process of organizing data to reduce redundancy and improve data integrity (1NF, 2NF, 3NF, BCNF).', tags: ['design'] },
+            { id: 305, question: 'Difference between DELETE and TRUNCATE?', answer: 'DELETE is a DML command (can be rolled back, deletes specific rows); TRUNCATE is a DDL command (cannot be rolled back, deletes all rows).', tags: ['sql'] },
+            { id: 306, question: 'What is a Joins in SQL?', answer: 'Used to combine rows from two or more tables based on a related column (Inner, Left, Right, Full).', tags: ['sql'] },
         ],
         ADVANCED: [
-            { id: 11, question: 'What are CSS Custom Properties?', answer: 'Variables defined by CSS authors that contain specific values to be reused throughout a document.', tags: ['variables'] },
+            { id: 307, question: 'What is Sharding?', answer: 'A horizontal partitioning method that splits a large database into smaller, faster, more manageable parts called shards.', tags: ['scaling'] },
+            { id: 308, question: 'Explain NoSQL vs SQL.', answer: 'SQL is relational, structured, and uses predefined schemas; NoSQL is non-relational, distributed, and flexible (Document, Key-Value, Graph).', tags: ['architecture'] },
         ]
     },
-    PYTHON: {
+    OS: {
         BASIC: [
-            { id: 12, question: 'What is Python?', answer: 'An interpreted, high-level, general-purpose programming language.', tags: ['backend'] },
-            { id: 13, question: 'What are Python data types?', answer: 'Integers, Floats, Strings, Booleans, Lists, Tuples, Dictionaries, and Sets.', tags: ['types'] },
+            { id: 401, question: 'What is an Operating System?', answer: 'Software that acts as an interface between computer hardware and the user.', tags: ['basics'] },
+            { id: 402, question: 'Difference between Process and Thread?', answer: 'A process is an independent program in execution; a thread is a subset of a process that shares the same memory space.', tags: ['execution'] },
         ],
         INTERMEDIATE: [
-            { id: 14, question: 'What is a Decorator?', answer: 'A function that takes another function and extends its behavior without explicitly modifying it.', tags: ['logic'] },
+            { id: 403, question: 'What is a Deadlock?', answer: 'A situation where a set of processes are blocked because each process is holding a resource and waiting for another resource held by another process.', tags: ['concurrency'] },
+            { id: 404, question: 'Explain Virtual Memory.', answer: 'A memory management technique that creates an illusion of a very large main memory by using the hard disk.', tags: ['memory'] },
+            { id: 405, question: 'What is Paging?', answer: 'A memory management scheme that eliminates the need for contiguous allocation of physical memory by dividing memory into fixed-size blocks.', tags: ['memory'] },
         ],
         ADVANCED: [
-            { id: 15, question: 'What is Global Interpreter Lock (GIL)?', answer: 'A mutex that allows only one thread to hold the control of the Python interpreter at a time.', tags: ['concurrency'] },
+            { id: 406, question: 'What is Thrashing?', answer: 'A state where the CPU spends more time swapping pages in and out of memory than executing actual instructions.', tags: ['performance'] },
+            { id: 407, question: 'What is the Banker\'s Algorithm?', answer: 'A resource allocation and deadlock avoidance algorithm that tests for safety by simulating the allocation of predetermined maximum possible amounts of all resources.', tags: ['algorithms'] },
+        ]
+    },
+    NETWORKS: {
+        BASIC: [
+            { id: 501, question: 'What is the OSI Model?', answer: 'A conceptual framework of 7 layers: Physical, Data Link, Network, Transport, Session, Presentation, Application.', tags: ['basics'] },
+            { id: 502, question: 'What is an IP Address?', answer: 'A unique numerical label assigned to each device connected to a computer network.', tags: ['ip'] },
+        ],
+        INTERMEDIATE: [
+            { id: 503, question: 'Difference between TCP and UDP?', answer: 'TCP is connection-oriented and reliable (3-way handshake); UDP is connectionless and faster (no delivery guarantee).', tags: ['protocols'] },
+            { id: 504, question: 'What is DNS?', answer: 'Domain Name System - it translates human-friendly domain names (google.com) into IP addresses (142.250.x.x).', tags: ['web'] },
+        ],
+        ADVANCED: [
+            { id: 505, question: 'How does HTTPS work?', answer: 'It is HTTP over SSL/TLS, providing encryption, data integrity, and authentication through certificates.', tags: ['security'] },
+            { id: 506, question: 'What is BGP (Border Gateway Protocol)?', answer: 'The protocol used to exchange routing information between autonomous systems on the internet.', tags: ['routing'] },
+        ]
+    },
+    WEB_TECH: {
+        BASIC: [
+            { id: 601, question: 'What is the DOM?', answer: 'Document Object Model - a programming interface for web documents that represents the page so programs can change structure/style.', tags: ['javascript'] },
+            { id: 602, question: 'Difference between let, const, and var?', answer: 'var is function-scoped; let and const are block-scoped. const cannot be reassigned.', tags: ['javascript'] },
+        ],
+        INTERMEDIATE: [
+            { id: 603, question: 'What is a Closure in JavaScript?', answer: 'A function that remembers its outer lexical environment even after the outer function has finished executing.', tags: ['javascript'] },
+            { id: 604, question: 'What is React Virtual DOM?', answer: 'A lightweight copy of the real DOM that React uses to optimize updates by only re-rendering changed elements.', tags: ['react'] },
+        ],
+        ADVANCED: [
+            { id: 605, question: 'What is SSR vs CSR?', answer: 'Server-Side Rendering (SSR) generates HTML on the server; Client-Side Rendering (CSR) renders content in the browser using JS.', tags: ['performance'] },
+        ]
+    },
+    ML: {
+        BASIC: [
+            { id: 701, question: 'What is Supervised Learning?', answer: 'Learning where the model is trained on labeled data (inputs and corresponding outputs).', tags: ['basics'] },
+            { id: 702, question: 'Difference between Classification and Regression?', answer: 'Classification predicts discrete categories (Yes/No); Regression predicts continuous values (Price/Temperature).', tags: ['basics'] },
+        ],
+        INTERMEDIATE: [
+            { id: 703, question: 'What is Overfitting?', answer: 'When a model learns the training data too well, including the noise, and performs poorly on new data.', tags: ['concepts'] },
+            { id: 704, question: 'Explain the Bias-Variance Tradeoff.', answer: 'The conflict in trying to simultaneously minimize two sources of error: Bias (underfitting) and Variance (overfitting).', tags: ['math'] },
+        ],
+        ADVANCED: [
+            { id: 705, question: 'What is a Neural Network?', answer: 'A series of algorithms that endeavor to recognize underlying relationships in a set of data through a process that mimics the human brain.', tags: ['deep-learning'] },
+            { id: 706, question: 'What is Gradient Descent?', answer: 'An optimization algorithm used to minimize a loss function by iteratively moving toward the steepest descent.', tags: ['optimization'] },
         ]
     }
 };
-
-
-
 const QuestionCard = ({ item, isExpanded, onToggle }) => (
     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
         <button onClick={onToggle} className="w-full flex items-start justify-between p-5 text-left group">
@@ -112,14 +156,17 @@ const QuestionCard = ({ item, isExpanded, onToggle }) => (
 export default function InterviewPage() {
     const [expandedItem, setExpandedItem] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
-    const [activeSubject, setActiveSubject] = useState('HTML');
+    const [activeSubject, setActiveSubject] = useState('PROGRAMMING');
     const [activeLevel, setActiveLevel] = useState('ALL');
 
     const subjects = [
-        { id: 'HTML', icon: Globe, color: 'text-orange-500' },
-        { id: 'CSS', icon: Palette, color: 'text-blue-500' },
-        { id: 'PYTHON', icon: Terminal, color: 'text-yellow-600' },
-        { id: 'DATA_ANALYSIS', icon: Layers, color: 'text-green-600' } // Added this line
+        { id: 'PROGRAMMING', icon: Terminal, color: 'text-yellow-600' },
+        { id: 'DATA_STRUCTURES', icon: Layers, color: 'text-green-600' },
+        { id: 'DBMS', icon: Database, color: 'text-blue-500' },
+        { id: 'OS', icon: Cpu, color: 'text-purple-500' },
+        { id: 'NETWORKS', icon: Network, color: 'text-red-500' },
+        { id: 'WEB_TECH', icon: Globe, color: 'text-orange-500' },
+        { id: 'ML', icon: CpuIcon, color: 'text-indigo-500' }
     ];
 
     const levels = [
@@ -130,7 +177,7 @@ export default function InterviewPage() {
     ];
 
     const filteredData = useMemo(() => {
-        const subjectData = INTERVIEW_QNA[activeSubject];
+        const subjectData = INTERVIEW_QNA[activeSubject] || {};
         let result = {};
 
         Object.keys(subjectData).forEach(level => {
@@ -150,20 +197,20 @@ export default function InterviewPage() {
             <div className="max-w-4xl mx-auto mt-15 lg:mt-10">
                 <div className="text-center mb-10">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Interview <span className="text-blue-600">Knowledge Base</span></h1>
-                    <p className="text-gray-500">Select a subject and difficulty to start practicing.</p>
+                    <p className="text-gray-500">Master core concepts for your technical interviews.</p>
                 </div>
 
                 {/* Subject Selector */}
-                <div className="flex justify-center gap-4 mb-8">
+                <div className="flex flex-wrap justify-center gap-4 mb-8">
                     {subjects.map((sub) => (
                         <button
                             key={sub.id}
                             onClick={() => { setActiveSubject(sub.id); setActiveLevel('ALL'); setExpandedItem(null); }}
-                            className={`flex flex-col items-center p-4 rounded-2xl w-24 transition-all shadow-sm border ${activeSubject === sub.id ? 'bg-white border-blue-500 ring-2 ring-blue-100 scale-105' : 'bg-white border-transparent hover:bg-gray-50'
+                            className={`flex flex-col items-center p-3 rounded-2xl w-24 transition-all shadow-sm border ${activeSubject === sub.id ? 'bg-white border-blue-500 ring-2 ring-blue-100 scale-105' : 'bg-white border-transparent hover:bg-gray-50'
                                 }`}
                         >
-                            <sub.icon size={24} className={activeSubject === sub.id ? sub.color : 'text-gray-400'} />
-                            <span className={`text-xs font-bold mt-2 ${activeSubject === sub.id ? 'text-gray-900' : 'text-gray-500'}`}>{sub.id}</span>
+                            <sub.icon size={22} className={activeSubject === sub.id ? sub.color : 'text-gray-400'} />
+                            <span className={`text-[10px] font-bold mt-2 text-center leading-tight ${activeSubject === sub.id ? 'text-gray-900' : 'text-gray-500'}`}>{sub.id.replace('_', ' ')}</span>
                         </button>
                     ))}
                 </div>

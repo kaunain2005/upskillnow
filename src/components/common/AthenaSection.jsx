@@ -64,7 +64,7 @@ export default function AthenaSection() {
             <br /> Your AI Professor
           </h2>
           <p className="mt-6 max-w-lg text-lg text-gray-600 dark:text-gray-300">
-            Athena is your personal guide at <strong>LevelUpLearn</strong>.
+            Athena is your personal guide at <strong>UpSkillNow</strong>.
             She explains complex topics, answers your questions, and helps
             you learn smarter — anytime, anywhere.
           </p>

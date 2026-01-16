@@ -1,4 +1,5 @@
 // src/(student)/courses/page.jsx
+
 'use client';
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
@@ -8,6 +9,7 @@ import { Suspense } from 'react';
 import LottiePlayer from '@/components/common/LottiePlayerWrapper';
 import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
 import { app } from "@/lib/firebase";
+
 
 const db = getFirestore(app);
 
@@ -331,4 +333,5 @@ export default function CoursePageInternal() {
             </div>
         </Suspense>
     );
+    
 }
