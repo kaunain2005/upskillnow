@@ -10,7 +10,7 @@ const ResumeTemplatesPage = () => {
       id: 1,
       name: 'Modern Professional',
       description: 'Clean and modern resume template perfect for tech professionals',
-      pdfUrl: 'https://s3.resume.io/cdn-cgi/image/width=380,format=auto/uploads/local_template_image/image/383/persistent-resource/santiago-resume-templates.jpg?v=1656070649',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template42.webp',
       thumbnail: '/templates/thumbnails/modern-professional.png',
       category: 'Modern',
     },
@@ -18,7 +18,7 @@ const ResumeTemplatesPage = () => {
       id: 2,
       name: 'Creative Resume',
       description: 'Bold and creative template for designers and creative professionals',
-      pdfUrl: '/templates/creative.pdf',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template12.webp',
       thumbnail: '/templates/thumbnails/creative.png',
       category: 'Creative',
     },
@@ -26,7 +26,7 @@ const ResumeTemplatesPage = () => {
       id: 3,
       name: 'Executive CV',
       description: 'Professional CV template for executive and management roles',
-      pdfUrl: '/templates/executive.pdf',
+      pdfUrl: 'https://cdn-images.zety.com/pages/executive-resume-example-ztus-cta-02.webp',
       thumbnail: '/templates/thumbnails/executive.png',
       category: 'Executive',
     },
@@ -34,7 +34,7 @@ const ResumeTemplatesPage = () => {
       id: 4,
       name: 'Simple Elegant',
       description: 'Minimal and elegant resume template with classic design',
-      pdfUrl: '/templates/simple-elegant.pdf',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template4.webp',
       thumbnail: '/templates/thumbnails/simple-elegant.png',
       category: 'Minimal',
     },
@@ -42,7 +42,7 @@ const ResumeTemplatesPage = () => {
       id: 5,
       name: 'ATS-Friendly',
       description: 'Optimized for Applicant Tracking Systems, simple but effective',
-      pdfUrl: '/templates/ats-friendly.pdf',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template4.webp',
       thumbnail: '/templates/thumbnails/ats-friendly.png',
       category: 'Technical',
     },
@@ -50,10 +50,147 @@ const ResumeTemplatesPage = () => {
       id: 6,
       name: 'Two-Column Layout',
       description: 'Modern two-column design for better organization of information',
-      pdfUrl: '/templates/two-column.pdf',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template2.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Two Column',
+      
+    },
+    {
+      id: 7,
+      name: 'Corporate Clean',
+      description: 'A simple, professional resume with a clean layout, ideal for corporate and ATS-friendly applications.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template11.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Professional',
+      
+    },
+    {
+      id: 8,
+      name: 'Structured Cards',
+      description: 'A modern resume with neatly organized sections for easy reading and quick scanning by recruiters.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template19.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Modern',
+      
     },
+     {
+      id: 9,
+      name: 'Technical Profile',
+      description: 'Clean, skill-focused resume highlighting technical expertise and projects.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template9.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Modern',
+      
+    },
+     {
+      id: 10,
+      name: 'Premium Grid',
+      description: 'A polished grid-based layout for a structured and professional look.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template18.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Modern',
+      
+    },
+     {
+      id: 11,
+      name: 'Full-Width Header with Right Highlight',
+      description: 'Bold header with key details emphasized on the right side.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template31.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Modern',
+      
+    },
+     {
+      id: 12,
+      name: 'Modern Contrast',
+      description: 'Uses subtle contrast to clearly separate sections and improve readability.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template49.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Modern',
+      
+    },
+     {
+      id: 13,
+      name: 'Creative Gradient',
+      description: 'A modern design with light gradients for a creative yet professional feel.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template12.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Creative',
+      
+    },
+     {
+      id: '14',
+      name: 'Dynamic Split',
+      description: 'Two-column layout that balances skills and experience effectively.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template44.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Creative',
+      
+    },
+     {
+      id: '15',
+      name: 'Minimal Accent',
+      description: 'Simple design with small color accents for a clean appearance.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template10.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Simple',
+      
+    },
+     {
+      id: '16',
+      name: 'Professional Single Column',
+      description: 'Traditional single-column layout optimized for ATS systems.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template1.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Single column',
+      
+    },
+     {
+      id: '17',
+      name: 'Bold Professional',
+      description: 'Strong headings and typography for a confident, impactful resume.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template7.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Single column',
+      
+    },
+     {
+      id: 18,
+      name: 'Framed Narrative',
+      description: 'Content framed neatly to guide the recruiter through your story.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template43.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Single column',
+      
+    },
+     {
+      id: 19,
+      name: 'Modern Brackets',
+      description: 'Stylish bracket elements used to organize sections clearly.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template17.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Modern',
+      
+    },
+     {
+      id: 20,
+      name: 'Strategic Asymmetry',
+      description: 'Asymmetric layout designed to stand out while staying readable.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template45.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Modern',
+      
+    },
+     {
+      id: 21,
+      name: 'Balanced Contrast',
+      description: 'A clean resume design using subtle contrast to separate sections while keeping a professional and readable layout.',
+      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template47.webp',
+      thumbnail: '/templates/thumbnails/two-column.png',
+      category: 'Modern',
+      
+    },
+
   ]);
 
   const handleOpenPDF = (pdfUrl) => {

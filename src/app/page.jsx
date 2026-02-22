@@ -139,7 +139,7 @@ const features = [
     title: "Career Guidelines",
     desc: "Step-by-step roadmaps to navigate your professional journey.",
     icon: <MapPin className="w-8 h-8" />,
-    path: "/career-guidelines",
+    path: "/career",
     color: "from-emerald-500 to-teal-500"
   },
 ];
