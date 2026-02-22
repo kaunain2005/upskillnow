@@ -276,12 +276,15 @@ label {
 
 select {
   width: 100%;
+  height: auto;
   padding: 10px;
   border-radius: 10px;
   border: 1px solid #ddd;
-  margin-top: 6px;
+  margin-top: 8px;
 }
-
+.card select option {
+  padding: 0px;
+}
 .primary-btn {
   margin-top: 20px;
   width: 100%;
@@ -292,27 +295,7 @@ select {
   border: none;
   font-weight: 600;
 }
-/*career css*/
-.career-detail-card {
-  background: white;
-  padding: 20px;
-  border-radius: 18px;
-  margin-top: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-}
 
-.career-detail-card section {
-  margin-top: 18px;
-}
-
-.career-detail-card h2 {
-  color: #4f46e5;
-}
-
-.career-detail-card h3 {
-  margin-bottom: 6px;
-  color: #111827;
-}
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

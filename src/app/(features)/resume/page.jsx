@@ -18,7 +18,7 @@ const ResumeTemplatesPage = () => {
       id: 2,
       name: 'Creative Resume',
       description: 'Bold and creative template for designers and creative professionals',
-      pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template12.webp',
+      pdfUrl: 'http://cdn.avanlo.com/templates/resume/regular/template12.webp',
       thumbnail: '/templates/thumbnails/creative.png',
       category: 'Creative',
     },
@@ -53,7 +53,7 @@ const ResumeTemplatesPage = () => {
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template2.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Two Column',
-      
+
     },
     {
       id: 7,
@@ -62,7 +62,7 @@ const ResumeTemplatesPage = () => {
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template11.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Professional',
-      
+
     },
     {
       id: 8,
@@ -71,124 +71,124 @@ const ResumeTemplatesPage = () => {
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template19.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Modern',
-      
+
     },
-     {
+    {
       id: 9,
       name: 'Technical Profile',
       description: 'Clean, skill-focused resume highlighting technical expertise and projects.',
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template9.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Modern',
-      
+
     },
-     {
+    {
       id: 10,
       name: 'Premium Grid',
       description: 'A polished grid-based layout for a structured and professional look.',
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template18.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Modern',
-      
+
     },
-     {
+    {
       id: 11,
       name: 'Full-Width Header with Right Highlight',
       description: 'Bold header with key details emphasized on the right side.',
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template31.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Modern',
-      
+
     },
-     {
+    {
       id: 12,
       name: 'Modern Contrast',
       description: 'Uses subtle contrast to clearly separate sections and improve readability.',
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template49.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Modern',
-      
+
     },
-     {
+    {
       id: 13,
       name: 'Creative Gradient',
       description: 'A modern design with light gradients for a creative yet professional feel.',
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template12.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Creative',
-      
+
     },
-     {
+    {
       id: '14',
       name: 'Dynamic Split',
       description: 'Two-column layout that balances skills and experience effectively.',
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template44.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Creative',
-      
+
     },
-     {
+    {
       id: '15',
       name: 'Minimal Accent',
       description: 'Simple design with small color accents for a clean appearance.',
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template10.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Simple',
-      
+
     },
-     {
+    {
       id: '16',
       name: 'Professional Single Column',
       description: 'Traditional single-column layout optimized for ATS systems.',
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template1.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Single column',
-      
+
     },
-     {
+    {
       id: '17',
       name: 'Bold Professional',
       description: 'Strong headings and typography for a confident, impactful resume.',
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template7.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Single column',
-      
+
     },
-     {
+    {
       id: 18,
       name: 'Framed Narrative',
       description: 'Content framed neatly to guide the recruiter through your story.',
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template43.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Single column',
-      
+
     },
-     {
+    {
       id: 19,
       name: 'Modern Brackets',
       description: 'Stylish bracket elements used to organize sections clearly.',
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template17.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Modern',
-      
+
     },
-     {
+    {
       id: 20,
       name: 'Strategic Asymmetry',
       description: 'Asymmetric layout designed to stand out while staying readable.',
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template45.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Modern',
-      
+
     },
-     {
+    {
       id: 21,
       name: 'Balanced Contrast',
       description: 'A clean resume design using subtle contrast to separate sections while keeping a professional and readable layout.',
       pdfUrl: 'https://cdn.avanlo.com/templates/resume/regular/template47.webp',
       thumbnail: '/templates/thumbnails/two-column.png',
       category: 'Modern',
-      
+
     },
 
   ]);
@@ -219,7 +219,6 @@ const ResumeTemplatesPage = () => {
           </p>
         </div>
       </div>
-
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Templates Grid */}
@@ -258,13 +257,16 @@ const ResumeTemplatesPage = () => {
 
                 {/* Action Buttons */}
                 <div className="flex gap-2">
-                  <button
-                    onClick={() => handleOpenPDF(template.pdfUrl)}
+                  
+                  <a href={template.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-lg transition-colors duration-200"
                   >
                     <FiExternalLink size={16} />
                     <span>Preview</span>
-                  </button>
+                  </a>
+
                   <button
                     onClick={() => handleDownloadPDF(template.pdfUrl, template.name)}
                     className="flex-1 flex items-center justify-center gap-2 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-900 dark:text-white font-medium py-2 px-3 rounded-lg transition-colors duration-200"

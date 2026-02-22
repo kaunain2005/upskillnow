@@ -147,7 +147,7 @@ export default function ListStudentsPage({ isDeleted = false, name = "List Stude
           onChange={(e) => setFilters({ ...filters, year: e.target.value })}
           className="px-3 py-2 rounded-lg border border-gray-300"
         >
-          <option value="">All Years</option>
+          <option value="">ars</option>
           <option value="FY">FY</option>
           <option value="SY">SY</option>
           <option value="TY">TY</option>

@@ -210,7 +210,7 @@ export default function LandingPage() {
   useEffect(() => {
     const typed = new Typed(typedRef.current, {
       strings: [
-        "<span class='text-blue-600'>UpSkillNow</span>",
+        "<span class='text-blue-600 >UpSkillNow</span>",
         "<span class='text-green-600'>Coding</span>",
         "<span class='text-purple-600'>Data Science</span>",
         "<span class='text-pink-600'>AI Learning</span>",
